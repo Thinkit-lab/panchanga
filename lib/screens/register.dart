@@ -86,35 +86,8 @@ class _RegisterState extends State<Register> {
               body: ListView(
                 physics: BouncingScrollPhysics(),
                 children: <Widget>[
-                  Container(
-                      width: 100,
-                      height: 150,
-                      child: Image.asset('assets/logo.jpeg'),
-                    ),
-                  // Padding(
-                  //   padding: EdgeInsets.only(top: 20.0, left: 20.0),
-                  //   child: Text(
-                  //     'Register',
-                  //     style: TextStyle(
-                  //       color: Colors.purple,
-                  //       fontSize: 30.0,
-                  //       fontWeight: FontWeight.w600,
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 10.0),
-                  // Padding(
-                  //   padding: EdgeInsets.only(left: 20.0),
-                  //   child: Text(
-                  //     'Create account',
-                  //     style: TextStyle(
-                  //       color: Colors.purple,
-                  //       fontSize: 16.0,
-                  //       fontWeight: FontWeight.w400,
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 50.0),
+
+                  SizedBox(height: 30.0),
                   Form(
                     key: _formKey,
                     child: Column(
@@ -142,7 +115,7 @@ class _RegisterState extends State<Register> {
                           ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(left: 20.0),
-                            hintText: 'Username',
+                            hintText: 'Name',
                             hintStyle: TextStyle(
                               color: Colors.purple,
                               fontSize: 16.0,
@@ -190,7 +163,7 @@ class _RegisterState extends State<Register> {
                   ),
                   // SizedBox(height: 20.0),
                   Padding(
-                      padding: EdgeInsets.all(20.0),
+                      padding: EdgeInsets.all(10.0),
                       child: Container(
                         padding: EdgeInsets.only(left: 10.0),
                         decoration: BoxDecoration(
@@ -217,7 +190,7 @@ class _RegisterState extends State<Register> {
                           textFieldController: controller,
                           inputBorder: InputBorder.none,
                           inputDecoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 20.0),
+                            // contentPadding: EdgeInsets.only(left: 10.0),
                             hintText: 'Phone Number',
                             hintStyle: TextStyle(
                               color: Colors.purple,
@@ -323,7 +296,7 @@ class _RegisterState extends State<Register> {
                         lastDate: DateTime(2100),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(left: 20.0),
-                          hintText: 'Date',
+                          hintText: 'Date of Birth',
                           hintStyle: TextStyle(
                             color: Colors.purple,
                             fontSize: 16.0,

@@ -8,7 +8,8 @@ import 'package:panchanga_pandit/controllers/login_controller.dart';
 import 'package:panchanga_pandit/screens/register.dart';
 import 'package:panchanga_pandit/screens/homescreen.dart';
 import 'package:panchanga_pandit/services/otp.dart';
-// import 'package:panchanga_pandit/services/auth.dart';
+import 'package:panchanga_pandit/services/auth.dart';
+import 'package:panchanga_pandit/services/phoneAuth.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -30,17 +31,19 @@ class _LoginState extends State<Login> {
       phoneIsoCode = isoCode;
     });
   }
-  // AuthService authService = AuthService();
+  AuthService authService = AuthService();
   LoginController loginController = LoginController();
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Container(
+    return Scaffold(
+      backgroundColor: Colors.black87,
+    body: Container(
       
       decoration: BoxDecoration(
-        color: Colors.white
+        color: Colors.black87
         // image: DecorationImage(
         //     image: AssetImage('assets/bg.jpg'), fit: BoxFit.cover),
       ),
@@ -77,11 +80,25 @@ class _LoginState extends State<Login> {
                   children: <Widget>[
                     SizedBox(height: 30.0),
                     Container(
+                      alignment: AlignmentDirectional.center,
                       width: 100,
                       height: 150,
-                      // child: Image.asset('assets/logo.jpeg'),
+                      child: Text(
+                        'Panchanga',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black87),
+                      ),
                     ),
-                    SizedBox(height: 30.0),
+                    Container(
+                      decoration: BoxDecoration(
+                      color: Color(0xffff9601),
+                      borderRadius: BorderRadius.circular(15)),
+                        height: 2,
+                        
+                        margin: EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                    
+                    SizedBox(height: 70.0),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
                       child: InkWell(
@@ -94,14 +111,14 @@ class _LoginState extends State<Login> {
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: Register()));
+                                  child: PhoneAuthPage()));
                         },
                         child: Container(
                           padding: EdgeInsets.all(15.0),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30.0),
-                            color: Colors.purple,
+                            color: Colors.black87,
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -132,7 +149,7 @@ class _LoginState extends State<Login> {
                       'We\'ll send OTP for Verification',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.purple,
+                        color: Colors.black87,
                         fontSize: 16.0,
                         fontWeight: FontWeight.w400,
                       ),
@@ -140,9 +157,9 @@ class _LoginState extends State<Login> {
                     SizedBox(height: 50.0),
                     
                     InkWell(
-                      onTap: (){
-                        loginController.login();
-                        // await authService.googleSignIn(context);
+                      onTap: ()async{
+                        // loginController.login();
+                        await authService.googleSignIn(context);
                       },
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
@@ -151,7 +168,7 @@ class _LoginState extends State<Login> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30.0),
-                            color: Colors.purple,
+                            color: Colors.black87,
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -191,7 +208,7 @@ class _LoginState extends State<Login> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   onWillPop() {

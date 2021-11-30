@@ -50,11 +50,7 @@ class _OTPScreenState extends State<OTPScreen> {
               SizedBox(
                 height: 20,
               ),
-              Container(
-                width: 120,
-                height: 120,
-                child: Image.asset('assets/logo.jpeg'),
-              ),
+              
               SizedBox(
                 height: 40,
               ),

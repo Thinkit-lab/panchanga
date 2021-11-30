@@ -6,6 +6,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:panchanga_pandit/screens/homescreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'dataBase.dart';
+
 class AuthService{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   // final storage = new FlutterSecureStorage();
@@ -80,6 +82,7 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
         UserCredential userCredential =
             await _auth.signInWithCredential(credential);
         storeTokenAndData(userCredential);
+        await  DatabaseService(uid: userCredential.user!.uid).updateUserData('new crew member', 'Male', '09/01/1995','7:35 PM','Lagere, Ile-Ife, Nigeria');
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (builder) => HomeScreen()),
