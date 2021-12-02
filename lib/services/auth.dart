@@ -97,7 +97,7 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
     } catch (e) {
       print("here---->");
       final snackBar = SnackBar(content: Text(e.toString()));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
