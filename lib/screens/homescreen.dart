@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:panchanga_pandit/screens/edit_profile.dart';
 import 'package:panchanga_pandit/services/auth.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,7 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           GestureDetector(
             onTap: () async {
-              await authService.signOut(context: context);
+              Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (builder) => SettingsForm()),
+            (route) => false);
+
             },
             child: Container(
               child: Icon(Icons.logout),
