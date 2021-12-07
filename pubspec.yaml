@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  http: ^0.13.3
+  http: 
   flutter_native_splash:
   intl: ^0.17.0
   get:
@@ -39,6 +39,9 @@ dependencies:
   flutter_secure_storage: ^4.2.0
   otp_text_field:
   provider:
+  timezone: ^0.5.4
+  uuid: ^2.0.4
+  
   
 
   # The following adds the Cupertino Icons font to your application.
