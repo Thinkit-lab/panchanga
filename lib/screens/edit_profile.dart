@@ -3,9 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:panchanga_pandit/components/address_search.dart';
 import 'package:panchanga_pandit/models/usermodel.dart';
 import 'package:panchanga_pandit/screens/homescreen.dart';
 import 'package:panchanga_pandit/services/dataBase.dart';
+import 'package:panchanga_pandit/services/place_service.dart';
+import 'package:uuid/uuid.dart';
 
 class SettingsForm extends StatefulWidget {
   @override
@@ -16,6 +19,13 @@ class _SettingsFormState extends State<SettingsForm> {
 
   final _formKey = GlobalKey<FormState>();
   final List<String> gender = ['Male', 'Female'];
+  final _placecontroller = TextEditingController();
+
+   @override
+  void dispose() {
+    _placecontroller.dispose();
+    super.dispose();
+  }
 
   // form values
   String ? _currentName;
@@ -25,6 +35,7 @@ class _SettingsFormState extends State<SettingsForm> {
   String ?_currentbirthPlace;
   FirebaseAuth firebaseAuth =FirebaseAuth.instance;
   TimeOfDay selectedTime = TimeOfDay.now();
+  // var uuid = Uuid();
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +155,7 @@ class _SettingsFormState extends State<SettingsForm> {
                                     onPressed: () {
                                     _selectTime(context);
                           },
-                        child: Text("Choose Time"),
+                        child: Text("Time of Birth "),
                         ),
                                ),
                           Padding(
@@ -158,6 +169,40 @@ class _SettingsFormState extends State<SettingsForm> {
                      SizedBox(
                       height: 20,
                     ),
+                    TextField(
+              controller: _placecontroller,
+              readOnly: true,
+              onTap: () async {
+                // generate a new token here
+                final sessionToken = Uuid().v4();
+                final Suggestion? result = await showSearch(
+                  context: context,
+                  delegate: AddressSearch(),
+                );
+                // This will change the text displayed in the TextField
+                if (result != null) {
+                  setState(() {
+                    _placecontroller.text = result.description;
+                    
+                  });
+                }
+              },
+              decoration: InputDecoration(
+                icon: Container(
+                  width: 10,
+                  height: 10,
+                  child: Icon(
+                    Icons.home,
+                    color: Colors.black,
+                  ),
+                ),
+                hintText: "Enter your birth address",
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 8.0, top: 16.0),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            
 
                       
                         RaisedButton(
@@ -172,7 +217,8 @@ class _SettingsFormState extends State<SettingsForm> {
                                 _currentName!, 
                                 _currentGender!, 
                                 _currentDob!, 
-                                selectedTime.toString().trimLeft(),
+                                selectedTime.toString(),
+                                _placecontroller.text,
                                 // _currentbirthTime ?? snapshot.data!.birthTime,
                                 // _currentbirthPlace ?? snapshot.data.name, 
                               );
