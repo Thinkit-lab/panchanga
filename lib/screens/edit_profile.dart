@@ -169,7 +169,12 @@ class _SettingsFormState extends State<SettingsForm> {
                      SizedBox(
                       height: 20,
                     ),
-                    TextField(
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200]!.withOpacity(0.5),
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                      child: TextField(
               controller: _placecontroller,
               readOnly: true,
               onTap: () async {
@@ -182,8 +187,8 @@ class _SettingsFormState extends State<SettingsForm> {
                 // This will change the text displayed in the TextField
                 if (result != null) {
                   setState(() {
-                    _placecontroller.text = result.description;
-                    
+                      _placecontroller.text = result.description;
+                      
                   });
                 }
               },
@@ -192,8 +197,8 @@ class _SettingsFormState extends State<SettingsForm> {
                   width: 10,
                   height: 10,
                   child: Icon(
-                    Icons.home,
-                    color: Colors.black,
+                      Icons.home,
+                      color: Colors.black,
                   ),
                 ),
                 hintText: "Enter your birth address",
@@ -201,10 +206,8 @@ class _SettingsFormState extends State<SettingsForm> {
                 contentPadding: EdgeInsets.only(left: 8.0, top: 16.0),
               ),
             ),
+                    ),
             SizedBox(height: 10.0),
-            
-
-                      
                         RaisedButton(
                           color: Colors.pink[400],
                           child: Text(
