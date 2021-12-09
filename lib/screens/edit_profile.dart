@@ -10,7 +10,8 @@ import 'package:panchanga_pandit/screens/homescreen.dart';
 import 'package:panchanga_pandit/services/dataBase.dart';
 import 'package:panchanga_pandit/services/place_service.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
+// import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_place/google_place.dart';
 
 class SettingsForm extends StatefulWidget {
   @override
@@ -229,11 +230,15 @@ class _SettingsFormState extends State<SettingsForm> {
                       title: Text(value.description!),
                     );
                   },
-                  onSuggestionSelected: (AutocompletePrediction suggestion) {
+                  onSuggestionSelected: (AutocompletePrediction suggestion)async {
                     String selectionPlaceId = suggestion.placeId!;
-                    final lat = detail.result.geometry.location.lat;
-                    final lng = detail.result.geometry.location.lng;
+                    // final lat = detail.result.geometry.location.lat;
+                    // final lng = detail.result.geometry.location.lng;
                     descriptionController!.text = suggestion.description!;
+                    var googlePlace = GooglePlace(kGoogleApiKey);
+                 var resul=await   googlePlace.details.get(selectionPlaceId);
+                 double lat=resul!.result!.geometry!.location!.lat!;
+                 double lng=resul.result!.geometry!.location!.lng!;
                     print(selectionPlaceId);
                   },
                 ),
@@ -290,7 +295,7 @@ class _SettingsFormState extends State<SettingsForm> {
                                 _currentGender!, 
                                 _currentDob!, 
                                 selectedTime.toString(),
-                                _placecontroller.text,
+                                descriptionController.text,
                                 // _currentbirthTime ?? snapshot.data!.birthTime,
                                 // _currentbirthPlace ?? snapshot.data.name, 
                               );
