@@ -41,6 +41,8 @@ dependencies:
   provider:
   timezone: ^0.5.4
   uuid: ^2.0.4
+  flutter_typeahead: ^3.2.1
+  flutter_google_places:
   
   
 

@@ -83,7 +83,7 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
         UserCredential userCredential =
             await _auth.signInWithCredential(credential);
         storeTokenAndData(userCredential);
-        await  DatabaseService(uid: userCredential.user!.uid).updateUserData('new crew member', 'Male', '09/01/1995','9:00 PM');
+        await  DatabaseService(uid: userCredential.user!.uid).updateUserData('new crew member', 'Male', '09/01/1995','9:00 PM','');
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (builder) => SettingsForm()),

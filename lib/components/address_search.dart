@@ -21,7 +21,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
       tooltip: 'Back',
       icon: Icon(Icons.arrow_back),
       onPressed: () {
-        close(context, null);
+        // close(context, null);
       },
     );
   }
@@ -46,12 +46,12 @@ class AddressSearch extends SearchDelegate<Suggestion> {
                   itemBuilder: (context, int index) => ListTile(
                     // we will display the data returned from our future here
                     title:
-                        Text(snapshot.data[index]),
+                        Text(snapshot.data![index]),
                     onTap: () {
                       close(context, snapshot.data[index]);
                     },
                   ),
-                  itemCount: snapshot.data.length,
+                  itemCount: snapshot.data!.length,
                 )
               : Container(child: Text('Loading...')),
     );
