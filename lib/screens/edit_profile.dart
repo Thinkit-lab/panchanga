@@ -1,6 +1,7 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:panchanga_pandit/components/address_search.dart';
@@ -9,6 +10,7 @@ import 'package:panchanga_pandit/screens/homescreen.dart';
 import 'package:panchanga_pandit/services/dataBase.dart';
 import 'package:panchanga_pandit/services/place_service.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 
 class SettingsForm extends StatefulWidget {
   @override
@@ -19,11 +21,11 @@ class _SettingsFormState extends State<SettingsForm> {
 
   final _formKey = GlobalKey<FormState>();
   final List<String> gender = ['Male', 'Female'];
-  final _placecontroller = TextEditingController();
+  final descriptionController = TextEditingController();
 
    @override
   void dispose() {
-    _placecontroller.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
@@ -35,7 +37,7 @@ class _SettingsFormState extends State<SettingsForm> {
   String ?_currentbirthPlace;
   FirebaseAuth firebaseAuth =FirebaseAuth.instance;
   TimeOfDay selectedTime = TimeOfDay.now();
-  // var uuid = Uuid();
+  static const kGoogleApiKey = "AIzaSyBuuKWh4NumeNi3JXoOG2YqMHu399rOo9s";
 
   @override
   Widget build(BuildContext context) {
@@ -169,44 +171,111 @@ class _SettingsFormState extends State<SettingsForm> {
                      SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200]!.withOpacity(0.5),
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    Form(
+                // key: UpdateAddress._formKey,
+                child: TypeAheadField(
+                  textFieldConfiguration: TextFieldConfiguration(
+                    // cursorColor: UIData.kbrightColor,
+                    autofocus: false,
+                    controller: descriptionController!,
+                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                        color: Colors.black,
+                        // fontFamily: FontFamily.sofiaPro,
+                        fontSize: 14),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      fillColor: Colors.grey[500]!.withOpacity(0.2),
+                      filled: true,
+                      // focusColor: Colors.accents,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
                       ),
-                      child: TextField(
-              controller: _placecontroller,
-              readOnly: true,
-              onTap: () async {
-                // generate a new token here
-                final sessionToken = Uuid().v4();
-                final Suggestion? result = await showSearch(
-                  context: context,
-                  delegate: AddressSearch(),
-                );
-                // This will change the text displayed in the TextField
-                if (result != null) {
-                  setState(() {
-                      _placecontroller.text = result.description;
-                      
-                  });
-                }
-              },
-              decoration: InputDecoration(
-                icon: Container(
-                  width: 10,
-                  height: 10,
-                  child: Icon(
-                      Icons.home,
-                      color: Colors.black,
-                  ),
-                ),
-                hintText: "Enter your birth address",
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 8.0, top: 16.0),
-              ),
-            ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        // ),
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 1,
+                        ),
+                      ),
+                      hintText: 'Search Location',
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .headline4!
+                          .copyWith(
+                              color: Colors.black54,
+                              // fontFamily: FontFamily.sofiaPro,
+                              fontSize: 14),
                     ),
+                  ),
+                  suggestionsCallback: (pattern) async {
+                    List<AutocompletePrediction> value = [];
+                    if (pattern.isNotEmpty) {
+                      var googlePlace = GooglePlace(kGoogleApiKey);
+                      var result =
+                          await googlePlace.queryAutocomplete.get(pattern);
+                      return result!.predictions!;
+                    }
+                    return value;
+                  },
+                  itemBuilder: (context, AutocompletePrediction value) {
+                    return ListTile(
+                      leading: Icon(Icons.place),
+                      title: Text(value.description!),
+                    );
+                  },
+                  onSuggestionSelected: (AutocompletePrediction suggestion) {
+                    String selectionPlaceId = suggestion.placeId!;
+                    final lat = detail.result.geometry.location.lat;
+                    final lng = detail.result.geometry.location.lng;
+                    descriptionController!.text = suggestion.description!;
+                    print(selectionPlaceId);
+                  },
+                ),
+              ),
+            //         Container(
+            //           decoration: BoxDecoration(
+            //             color: Colors.grey[200]!.withOpacity(0.5),
+            //             borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            //           ),
+            //           child: TextField(
+            //   controller: _placecontroller,
+            //   readOnly: true,
+            //   onTap: () async {
+            //     // generate a new token here
+            //     final sessionToken = Uuid().v4();
+            //     final Suggestion? result = await showSearch(
+            //       context: context,
+            //       delegate: AddressSearch(),
+            //     );
+            //     // This will change the text displayed in the TextField
+            //     if (result != null) {
+            //       setState(() {
+            //           _placecontroller.text = result.description;
+                      
+            //       });
+            //     }
+            //   },
+            //   decoration: InputDecoration(
+            //     icon: Container(
+            //       width: 10,
+            //       height: 10,
+            //       child: Icon(
+            //           Icons.home,
+            //           color: Colors.black,
+            //       ),
+            //     ),
+            //     hintText: "Enter your birth address",
+            //     border: InputBorder.none,
+            //     contentPadding: EdgeInsets.only(left: 8.0, top: 16.0),
+            //   ),
+            // ),
+            //         ),
             SizedBox(height: 10.0),
                         RaisedButton(
                           color: Colors.pink[400],
