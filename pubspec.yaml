@@ -40,10 +40,11 @@ dependencies:
   otp_text_field:
   provider:
   timezone: ^0.5.4
-  uuid: ^2.0.4
+  # uuid: ^2.0.4
   flutter_typeahead: ^3.2.1
   # flutter_google_places: ^0.3.0
   google_place: ^0.4.3
+  flutter_native_timezone: ^2.0.0
 
   
   

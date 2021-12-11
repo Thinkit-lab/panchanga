@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:panchanga_pandit/screens/homescreen.dart';
 import 'package:panchanga_pandit/screens/login.dart';
+import 'package:panchanga_pandit/screens/profile_show.dart';
 
 
 class HomeController extends GetxController {
@@ -34,7 +35,7 @@ class HomeController extends GetxController {
   void handleAuthStateChanged(isLoggedIn) async{
     if (isLoggedIn) {
       
-            Get.off(() => HomeScreen());
+            // Get.off(() => ProfilePage());
     //  await Get.offAllNamed(Routes.WELCOME, arguments: firebaseAuth.currentUser);
     } else {
       // Get.offAllNamed(Routes.LOGIN);

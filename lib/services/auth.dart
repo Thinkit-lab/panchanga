@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:panchanga_pandit/screens/edit_profile.dart';
 import 'package:panchanga_pandit/screens/homescreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:panchanga_pandit/screens/profile_show.dart';
 
 import 'dataBase.dart';
 
@@ -83,7 +85,7 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
         UserCredential userCredential =
             await _auth.signInWithCredential(credential);
         storeTokenAndData(userCredential);
-        await  DatabaseService(uid: userCredential.user!.uid).updateUserData('new crew member', 'Male', '09/01/1995','9:00 PM','');
+        await  DatabaseService(uid: userCredential.user!.uid).updateUserData('new crew member', 'Male', '09/01/1995','9:00 PM','','','','');
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (builder) => SettingsForm()),
@@ -166,9 +168,10 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       storeTokenAndData(userCredential);
-      Navigator.pushAndRemoveUntil(
+      //  Get.off(()=>SettingsForm());
+      await Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (builder) => HomeScreen()),
+          MaterialPageRoute(builder: (builder) => SettingsForm()),
           (route) => false);
 
       showSnackBar(context, "logged In");

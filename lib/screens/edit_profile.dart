@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +9,13 @@ import 'package:page_transition/page_transition.dart';
 import 'package:panchanga_pandit/components/address_search.dart';
 import 'package:panchanga_pandit/models/usermodel.dart';
 import 'package:panchanga_pandit/screens/homescreen.dart';
+import 'package:panchanga_pandit/screens/profile_show.dart';
 import 'package:panchanga_pandit/services/dataBase.dart';
 import 'package:panchanga_pandit/services/place_service.dart';
-import 'package:uuid/uuid.dart';
-// import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_place/google_place.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
-class SettingsForm extends StatefulWidget {
+class  SettingsForm extends StatefulWidget {
   @override
   _SettingsFormState createState() => _SettingsFormState();
 }
@@ -24,10 +26,17 @@ class _SettingsFormState extends State<SettingsForm> {
   final List<String> gender = ['Male', 'Female'];
   final descriptionController = TextEditingController();
 
+
    @override
   void dispose() {
     descriptionController.dispose();
     super.dispose();
+  }
+
+   @override
+  void initState() {
+    super.initState();
+    _initData();
   }
 
   // form values
@@ -36,6 +45,9 @@ class _SettingsFormState extends State<SettingsForm> {
   String ?_currentDob;
   String ?_currentbirthTime;
   String ?_currentbirthPlace;
+  String ? lat;
+  String ? lng;
+  String _timezone = 'Unknown';
   FirebaseAuth firebaseAuth =FirebaseAuth.instance;
   TimeOfDay selectedTime = TimeOfDay.now();
   static const kGoogleApiKey = "AIzaSyBuuKWh4NumeNi3JXoOG2YqMHu399rOo9s";
@@ -172,77 +184,81 @@ class _SettingsFormState extends State<SettingsForm> {
                      SizedBox(
                       height: 20,
                     ),
-                    Form(
+                    Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200]!.withOpacity(0.5),
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                      child: Form(
                 // key: UpdateAddress._formKey,
                 child: TypeAheadField(
                   textFieldConfiguration: TextFieldConfiguration(
-                    // cursorColor: UIData.kbrightColor,
-                    autofocus: false,
-                    controller: descriptionController!,
-                    style: Theme.of(context).textTheme.headline4!.copyWith(
-                        color: Colors.black,
-                        // fontFamily: FontFamily.sofiaPro,
-                        fontSize: 14),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      fillColor: Colors.grey[500]!.withOpacity(0.2),
-                      filled: true,
-                      // focusColor: Colors.accents,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        // ),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 1,
+                      // cursorColor: UIData.kbrightColor,
+                      autofocus: false,
+                      controller: descriptionController,
+                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                          color: Colors.black,
+                          // fontFamily: FontFamily.sofiaPro,
+                          fontSize: 14),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 20.0, top: 30),
+                        isDense: true,
+                        fillColor: Colors.grey[500]!.withOpacity(0.2),
+                        filled: true,
+                        // focusColor: Colors.accents,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          // ),
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 1,
+                          ),
+                        ),
+                        hintText: 'Enter Birth Place',
+                        hintStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
                       ),
-                      hintText: 'Search Location',
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .headline4!
-                          .copyWith(
-                              color: Colors.black54,
-                              // fontFamily: FontFamily.sofiaPro,
-                              fontSize: 14),
-                    ),
                   ),
                   suggestionsCallback: (pattern) async {
-                    List<AutocompletePrediction> value = [];
-                    if (pattern.isNotEmpty) {
-                      var googlePlace = GooglePlace(kGoogleApiKey);
-                      var result =
-                          await googlePlace.queryAutocomplete.get(pattern);
-                      return result!.predictions!;
-                    }
-                    return value;
+                      List<AutocompletePrediction> value = [];
+                      if (pattern.isNotEmpty) {
+                        var googlePlace = GooglePlace(kGoogleApiKey);
+                        var result =
+                            await googlePlace.queryAutocomplete.get(pattern);
+                        return result!.predictions!;
+                      }
+                      return value;
                   },
                   itemBuilder: (context, AutocompletePrediction value) {
-                    return ListTile(
-                      leading: Icon(Icons.place),
-                      title: Text(value.description!),
-                    );
+                      return ListTile(
+                        leading: Icon(Icons.place),
+                        title: Text(value.description!),
+                      );
                   },
                   onSuggestionSelected: (AutocompletePrediction suggestion)async {
-                    String selectionPlaceId = suggestion.placeId!;
-                    // final lat = detail.result.geometry.location.lat;
-                    // final lng = detail.result.geometry.location.lng;
-                    descriptionController!.text = suggestion.description!;
-                    var googlePlace = GooglePlace(kGoogleApiKey);
+                      String selectionPlaceId = suggestion.placeId!;
+                      descriptionController.text = suggestion.description!;
+                      var googlePlace = GooglePlace(kGoogleApiKey);
                  var resul=await   googlePlace.details.get(selectionPlaceId);
-                 double lat=resul!.result!.geometry!.location!.lat!;
-                 double lng=resul.result!.geometry!.location!.lng!;
-                    print(selectionPlaceId);
+                  lat=resul!.result!.geometry!.location!.lat!.toString();
+                  lng=resul.result!.geometry!.location!.lng!.toString();
+                      print(selectionPlaceId);
                   },
                 ),
               ),
+                    ),
             //         Container(
             //           decoration: BoxDecoration(
             //             color: Colors.grey[200]!.withOpacity(0.5),
@@ -296,10 +312,11 @@ class _SettingsFormState extends State<SettingsForm> {
                                 _currentDob!, 
                                 selectedTime.toString(),
                                 descriptionController.text,
-                                // _currentbirthTime ?? snapshot.data!.birthTime,
-                                // _currentbirthPlace ?? snapshot.data.name, 
+                                lat!,
+                                lng!,
+                                _timezone,
                               );
-                              Get.off(()=>HomeScreen());
+                              Get.off(()=>ProfilePage());
                           }
                           }
                         ),
@@ -331,4 +348,12 @@ class _SettingsFormState extends State<SettingsForm> {
           });
         }
   }
+
+   Future<void> _initData() async {
+    try {
+      _timezone = await FlutterNativeTimezone.getLocalTimezone();
+    } catch (e) {
+      print('Could not get the local timezone');
+    }
+   }
 }

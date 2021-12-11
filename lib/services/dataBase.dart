@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:panchanga_pandit/models/usermodel.dart';
 
 
@@ -9,14 +10,18 @@ class DatabaseService {
 
   // collection reference
   final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+  FirebaseAuth firebaseAuth =  FirebaseAuth.instance;
 
-  Future<void> updateUserData(String name, String gender, String dob, String birthTime, String birthPlace) async {
+  Future<void> updateUserData(String name, String gender, String dob, String birthTime, String birthPlace, String lat, String lng, timeZone) async {
     return await userCollection.doc(uid).set({
       'gender': gender,
       'name': name,
       'dob': dob,
       'birthTime': birthTime,
       'birthPlace': birthPlace,
+      'lat': lat,
+      'lng': lng, 
+      'timeZone':timeZone,
 
     });
   }
@@ -35,5 +40,23 @@ class DatabaseService {
     return userCollection.doc(uid).snapshots()
       .map(_userDataFromSnapshot);
   }
+
+  // getUserById () async {
+  //   await userCollection.doc(firebaseAuth.currentUser!.uid).get().then((ds) {
+  //     'gender': gender,
+  //     'name': name,
+  //     'dob': dob,
+  //     'birthTime': birthTime,
+  //     'birthPlace': birthPlace,
+  //     'lat': lat,
+  //     'lng': lng, 
+  //     'timeZone':timeZone,
+
+  //     gender = ds.data['gender'];
+  //       print(myEmail);
+  //     }).catchError((e) {
+  //       print(e);
+  //     });
+  // }
 
 }
