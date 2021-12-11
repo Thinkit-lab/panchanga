@@ -168,11 +168,11 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       storeTokenAndData(userCredential);
-      //  Get.off(()=>SettingsForm());
-      await Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (builder) => SettingsForm()),
-          (route) => false);
+       await Get.off(()=>SettingsForm());
+      // await Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(builder: (builder) => SettingsForm()),
+      //     (route) => false);
 
       showSnackBar(context, "logged In");
     } catch (e) {
